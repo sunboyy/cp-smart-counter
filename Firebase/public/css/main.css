@@ -1,0 +1,32 @@
+.row-room {
+    margin: 16px 0;
+}
+.col-room {
+    border: 1px solid #ccc;
+    padding: 16px;
+}
+#app {
+    margin-top: 16px;
+}
+.big-number {
+    text-align: center;
+    font-size: 5em;
+}
+.statuslight {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+.statuslight-low {
+    background-color: #0f0;
+}
+.statuslight-medium {
+    background-color: #fc0;
+}
+.statuslight-high {
+    background-color: #f33;
+}
+.btn-edit {
+    float: right;
+}
