@@ -37,9 +37,6 @@ let vm = new Vue({
     created() {
         this.loadCount();
     },
-    computed: {
-
-    },
     methods: {
         getStatus(count, max) {
             if (count < max / 3) return 'low';
