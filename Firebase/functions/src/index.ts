@@ -160,10 +160,3 @@ export const room = functions.https.onRequest((request, response) => {
         response.sendStatus(500);
     });
 });
-
-export const addRoom = functions.https.onRequest((request, response) => {
-    const max: number = parseInt(request.query.max);
-    db.ref('/room').push({ count: 0, max }).then(snapshot => {
-        response.send('Success');
-    });
-});
