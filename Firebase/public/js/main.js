@@ -58,6 +58,12 @@ let vm = new Vue({
                 this.isLoading = false;
             });
         },
+        clearCount(roomId) {
+            this.isLoading = true;
+            db.ref('/room/' + roomId + '/count').set(0).then(() => {
+                this.loadCount();
+            });
+        },
         reset() {
             this.isLoading = true;
             db.ref('/room').once('value').then(snapshot => {

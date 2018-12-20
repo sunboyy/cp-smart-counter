@@ -46,17 +46,20 @@
                 <div class="col-sm-6 col-room" v-for="room in rooms">
                     Room ID: {{room.id}}
                     <div class="statuslight" v-bind:class="'statuslight-' + getStatus(room.count, room.max)"></div>
-                    <div class="btn-edit">
-                        <button class="btn btn-info" @click="showEditRoomCapacity(room.id)" data-toggle="modal" data-target="#editroom-form">
+                    <div class="btn-edit btn-group" role="group">
+                        <button class="btn btn-warning" @click="clearCount(room.id)" v-bind:disabled="isLoading">
+                            <span class="fa fa-broom"></span>
+                        </button>
+                        <button class="btn btn-info" @click="showEditRoomCapacity(room.id)" v-bind:disabled="isLoading"
+                            data-toggle="modal" data-target="#editroom-form">
                             <span class="fa fa-pen"></span>
                         </button>
                     </div>
                     <div class="big-number">{{room.count}}/{{room.max}}</div>
                 </div>
             </div>
-            <!-- <div class="alert alert-info" v-if="isLoading">Loading...</div> -->
             <button class="btn btn-primary" @click="loadCount()" v-bind:disabled="isLoading">Reload</button>
-            <button class="btn btn-primary" @click="reset()" v-bind:disabled="isLoading">Reset</button>
+            <button class="btn btn-warning" @click="reset()" v-bind:disabled="isLoading">Reset</button>
         </div>
     </div>
     <script src="js/main.js"></script>

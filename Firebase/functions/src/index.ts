@@ -70,6 +70,10 @@ export const goin = functions.https.onRequest((request, response) => {
     const roomId = request.query.room;
     db.ref('/room/' + roomId).once('value').then(snapshot => {
         const value: Room = snapshot.val();
+        if (value === null) {
+            response.sendStatus(404);
+            return;
+        }
         value.count++;
         db.ref('/room/' + roomId).set(value).then(() => {
             response.json(statusObject(value));
@@ -86,6 +90,10 @@ export const goout = functions.https.onRequest((request, response) => {
     const roomId = request.query.room;
     db.ref('/room/' + roomId).once('value').then(snapshot => {
         const value: Room = snapshot.val();
+        if (value === null) {
+            response.sendStatus(404);
+            return;
+        }
         value.count--;
         if (value.count < 0) value.count = 0;
         db.ref('/room/' + roomId).set(value).then(() => {
@@ -105,29 +113,16 @@ export const move = functions.https.onRequest((request, response) => {
     const toRoomId = request.query.to;
     db.ref('/room').once('value').then(snapshot => {
         const value = snapshot.val();
+        if (value[fromRoomId] === null || value[toRoomId] === null) {
+            response.sendStatus(404);
+            return;
+        }
         if (value[fromRoomId].count > 0) {
             value[fromRoomId].count--;
             value[toRoomId].count++;
         }
         db.ref('/room').set(value).then(() => {
             response.json(value);
-        }).catch(reason => {
-            console.error(reason);
-            response.sendStatus(500);
-        });
-    }).catch(reason => {
-        console.error(reason);
-        response.sendStatus(500);
-    });
-});
-
-export const resetCount = functions.https.onRequest((request, response) => {
-    db.ref('/room').once('value').then(snapshot => {
-        const value = snapshot.val();
-        Object.keys(value).forEach(key => value[key].count = 0);
-        console.log(value);
-        db.ref('/room').set(value).then(() => {
-            response.sendStatus(200);
         }).catch(reason => {
             console.error(reason);
             response.sendStatus(500);
@@ -153,6 +148,10 @@ export const room = functions.https.onRequest((request, response) => {
     const roomId: string = request.query.id;
     db.ref('/room/' + roomId).once('value').then(snapshot => {
         const value: Room = snapshot.val();
+        if (value === null) {
+            response.sendStatus(404);
+            return;
+        }
         const result = statusObject(value);
         response.json(result);
     }).catch(reason => {
