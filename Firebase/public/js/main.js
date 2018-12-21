@@ -36,7 +36,16 @@ let vm = new Vue({
         isLoading: false
     },
     created() {
-        this.loadCount();
+        this.isLoading = true;
+        db.ref('/room').on('value', snapshot => {
+            const value = snapshot.val();
+            this.rooms = Object.keys(value).map(roomId => ({
+                id: roomId,
+                count: value[roomId].count,
+                max: value[roomId].max
+            }));
+            this.isLoading = false;
+        });
     },
     methods: {
         getStatus(count, max) {
@@ -44,22 +53,10 @@ let vm = new Vue({
             if (count > 2 * max / 3) return 'high';
             return 'medium';
         },
-        loadCount() {
-            this.isLoading = true;
-            db.ref('/room').once('value').then(snapshot => {
-                const value = snapshot.val();
-                this.rooms = Object.keys(value).map(roomId => ({
-                    id: roomId,
-                    count: value[roomId].count,
-                    max: value[roomId].max
-                }));
-                this.isLoading = false;
-            });
-        },
         clearCount(roomId) {
             this.isLoading = true;
             db.ref('/room/' + roomId + '/count').set(0).then(() => {
-                this.loadCount();
+                this.isLoading = false;
             });
         },
         reset() {
@@ -68,7 +65,7 @@ let vm = new Vue({
                 const value = snapshot.val();
                 Object.keys(value).forEach(key => value[key].count = 0);
                 db.ref('/room').set(value).then(() => {
-                    this.loadCount();
+                    this.isLoading = false;
                 });
             });
         },
@@ -84,7 +81,7 @@ let vm = new Vue({
             this.isLoading = true;
             this.editingRoomError = ''
             db.ref('/room/' + this.editingRoom.id + '/max').set(value).then(() => {
-                this.loadCount();
+                this.isLoading = false;
                 $('#editroom-form').modal('toggle');
             });
         }

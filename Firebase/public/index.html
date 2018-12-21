@@ -58,8 +58,7 @@
                     <div class="big-number">{{room.count}}/{{room.max}}</div>
                 </div>
             </div>
-            <button class="btn btn-primary" @click="loadCount()" v-bind:disabled="isLoading">Reload</button>
-            <button class="btn btn-warning" @click="reset()" v-bind:disabled="isLoading">Reset</button>
+            <button class="btn btn-warning" @click="reset()" v-bind:disabled="isLoading">Reset all rooms</button>
         </div>
     </div>
     <script src="js/main.js"></script>
