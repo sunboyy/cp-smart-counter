@@ -29,6 +29,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="alert alert-danger" v-if="editingRoomError.length > 0">{{editingRoomError}}</div>
                         Maximum capacity: <input type="text" v-model="editingRoom.max">
                     </div>
                     <div class="modal-footer">

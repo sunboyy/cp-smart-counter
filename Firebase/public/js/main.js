@@ -32,6 +32,7 @@ let vm = new Vue({
             id: '',
             max: 0
         },
+        editingRoomError: '',
         isLoading: false
     },
     created() {
@@ -75,14 +76,16 @@ let vm = new Vue({
             this.editingRoom = clone(this.rooms.filter(room => room.id === roomId)[0]);
         },
         editRoomCapacity() {
+            const value = parseInt(this.editingRoom.max);
+            if (isNaN(value) || value <= 0) {
+                this.editingRoomError = 'Error setting capacity to ' + this.editingRoom.max;
+                return;
+            }
             this.isLoading = true;
-            db.ref('/room/' + this.editingRoom.id).once('value').then(snapshot => {
-                const value = snapshot.val();
-                value.max = parseInt(this.editingRoom.max);
-                db.ref('/room/' + this.editingRoom.id).set(value).then(() => {
-                    this.loadCount();
-                    $('#editroom-form').modal('toggle');
-                });
+            this.editingRoomError = ''
+            db.ref('/room/' + this.editingRoom.id + '/max').set(value).then(() => {
+                this.loadCount();
+                $('#editroom-form').modal('toggle');
             });
         }
     }
